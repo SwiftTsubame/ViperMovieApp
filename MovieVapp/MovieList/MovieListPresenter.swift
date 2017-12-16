@@ -14,8 +14,6 @@ protocol MovieListPresentation: class {
     func movie(at index: Int) -> Movie?
     func loadMovies(onSuccess: () -> Void, onFailure: () -> Void)
     func selectMovie(_ movie: Movie, currentVC: UIViewController)
-    func updateViewWithDetailVCData(_ newColor: (UIColor) -> Void)
-    func changeToNewColor(color: UIColor)
 }
 
 class MovieListPresenter: MovieListPresentation {
@@ -37,14 +35,14 @@ class MovieListPresenter: MovieListPresentation {
     }
 
     var movieCount: Int {
-        return interactor.loadedMovies().count
+        return interactor.allMovies().count
     }
 
     func movie(at index: Int) -> Movie? {
-        if index > interactor.loadedMovies().count - 1 {
+        if index > interactor.allMovies().count - 1 {
             return nil
         }
-        return interactor.loadedMovies()[index]
+        return interactor.allMovies()[index]
     }
 
     func loadMovies(onSuccess: () -> Void, onFailure: () -> Void) {
@@ -59,16 +57,6 @@ class MovieListPresenter: MovieListPresentation {
     }
 
     func selectMovie(_ movie: Movie, currentVC: UIViewController) {
-//        router.container.presenter.listPresenter = self
         router.presentMovieDetailView(with: movie, fromVC: currentVC)
-    }
-
-    func updateViewWithDetailVCData(_ newColor: (UIColor) -> Void) {
-        guard let color = self.color else { return }
-        newColor(color)
-    }
-
-    func changeToNewColor(color: UIColor) {
-        self.color = color
     }
 }

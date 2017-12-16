@@ -19,13 +19,6 @@ class MovieListCollectionViewController: UICollectionViewController {
         loadMovieList()
     }
 
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        presenter?.updateViewWithDetailVCData { [weak self] (newColor) in
-            self?.collectionView?.backgroundColor = newColor
-        }
-    }
-
     private func setupCollectionView() {
         collectionView?.backgroundColor = .white
         collectionView?.alwaysBounceVertical = true

@@ -13,7 +13,7 @@ class MovieListInteractorTests: XCTestCase {
 
     class MockMovieListInteractor: MovieListInteraction {
 
-        func loadedMovies() -> [Movie] {
+        func getMovies() -> [Movie] {
             return []
         }
 

@@ -30,13 +30,12 @@ class MovieDetailViewController: UIViewController, MovieDetailViewing {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupViews()
-        showMovieDetailOnViewDidLoad()
+        showMovieDetail()
     }
 
     // MARK: Setup View Components
     private func setupViews() {
         addMovieNameLabel()
-        addNavBarButton()
     }
 
     private func addMovieNameLabel() {
@@ -44,28 +43,12 @@ class MovieDetailViewController: UIViewController, MovieDetailViewing {
         nameLabel.fillSuperview()
     }
 
-    private func addNavBarButton() {
-        let favoriteButton = UIBarButtonItem(title: "Change Color",
-                                             style: .done,
-                                             target: self,
-                                             action: #selector(tapChangeColorBarButton))
-        navigationItem.rightBarButtonItem = favoriteButton
-    }
-
     // MARK: Actions
-    private func showMovieDetailOnViewDidLoad() {
+    private func showMovieDetail() {
         presenter?.showDetailOnViewDidLoad(withMovie: { [weak self] (movie) in
             self?.nameLabel.text = movie.name
             }, noMovie: {
                 print("No movie returned, weird!!")
         })
-    }
-
-    @objc func tapChangeColorBarButton() {
-        let randomColor = UIColor(red: CGFloat(drand48()),
-                                  green: CGFloat(drand48()),
-                                  blue: CGFloat(drand48()),
-                                  alpha: 1)
-        presenter?.onChangeColorTapped(changeTo: randomColor)
     }
 }

@@ -10,14 +10,14 @@ import Foundation
 
 protocol MovieListInteraction {
     func loadMovies(endPoint: Endpoint, completion: (Result<[Movie]>) -> Void)
-    func loadedMovies() -> [Movie]
+    func allMovies() -> [Movie]
 }
 
 class MovieListInteractor: MovieListInteraction {
 
     private var movies: [Movie]?
 
-    func loadedMovies() -> [Movie] {
+    func allMovies() -> [Movie] {
         return movies ?? []
     }
 

@@ -32,7 +32,8 @@ class MovieCell: BaseCell {
                                             right: rightAnchor,
                                             topConstant: 0,
                                             leftConstant: 16,
-                                            bottomConstant: 0, rightConstant: 16)
+                                            bottomConstant: 0,
+                                            rightConstant: 16)
         bottomSeparationLine.anchorToTop(top: nil, left: leftAnchor, bottom: bottomAnchor, right: rightAnchor)
         bottomSeparationLine.heightAnchor.constraint(equalToConstant: 1.0).isActive = true
     }

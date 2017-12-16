@@ -15,13 +15,11 @@ protocol MovieDetailPresentation: class {
     var interactor: MovieDetailInteraction { get }
     var router: MovieDetailRouting { get }
     func showDetailOnViewDidLoad(withMovie: (Movie) -> Void, noMovie: () -> Void)
-    func onChangeColorTapped(changeTo color: UIColor)
 }
 
 class MovieDetailPresenter: MovieDetailPresentation {
     var interactor: MovieDetailInteraction
     var router: MovieDetailRouting
-    weak var listPresenter: MovieListPresentation?
 
     init(interactor: MovieDetailInteraction,
          router: MovieDetailRouting) {
@@ -35,9 +33,5 @@ class MovieDetailPresenter: MovieDetailPresentation {
             return
         }
         withMovie(selectedMovie)
-    }
-
-    func onChangeColorTapped(changeTo color: UIColor) {
-        listPresenter?.changeToNewColor(color: color)
     }
 }
