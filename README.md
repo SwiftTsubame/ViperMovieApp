@@ -46,6 +46,7 @@ VIPER comes with a lot of boilplate codes. We have created a script to generate 
 ## TODO:
 1. Implement more real-life like UI
 2. Allow other user interactions such as "sorting", "filtering"
+3. A lot more to come
 
 # Contact:
 I am still in the process of digesting clean architecture and how it can be applied in iOS. If you have any suggestion or questions, please submit a PR or drop me a message at @haiyan_nest on Twitter :)
