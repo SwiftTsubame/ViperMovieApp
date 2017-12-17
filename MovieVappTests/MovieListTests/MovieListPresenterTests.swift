@@ -11,66 +11,86 @@ import XCTest
 
 class MovieListPresenterTests: XCTestCase {
 
-    class MockMovieListInteractor: MovieListInteractor {
-        var result: Result<[Movie]>?
-        override func loadMovies(endPoint: Endpoint, completion: (Result<[Movie]>) -> Void) {
-            completion(result!)
+    class MockInteracotr: MovieListInteractor {
+        override func loadMovies(endPoint: Endpoint) {
         }
     }
-
-    class MockRouter: MovieListRouter {
+    
+    class MockRouter: MovieListRouting {
+        var container: MovieDetailDependencyContainer = MovieDetailDependencyContainer()
         var movie: Movie?
-        override func presentMovieDetailView(with movie: Movie, fromVC: UIViewController) {
+        func presentMovieDetailView(with movie: Movie) {
             self.movie = movie
         }
     }
+    
+    class MockInterface: MovieListViewInterface {
+        var shouldLoadMovieListWithMovies = false
+        var shouldShowError = false
 
-    var presenter2: MovieListPresenter!
-    let mockInteractor = MockMovieListInteractor()
+        func loadMovieListWithMovies() {
+            shouldLoadMovieListWithMovies = true
+        }
+        
+        func showLoadingError(errorMessage: String) {
+            shouldShowError = true
+        }
+    }
+
+    var presenter: MovieListPresenter?
+    let mockInteractor = MockInteracotr()
     let mockRouter = MockRouter()
-
-    var failureCount: Int = 0
-    var successCount: Int = 0
-
+    let fakeMovies = [Movie(name: "aaa", rating: 1)]
+    var mockInterface: MockInterface?
+    
     override func setUp() {
         super.setUp()
-        presenter2 = MovieListPresenter(interactor: mockInteractor, router: mockRouter)
+        presenter = MovieListPresenter(interactor: mockInteractor, router: mockRouter)
+        mockInterface = MockInterface()
+        presenter?.movieListViewInterface = mockInterface
     }
 
     override func tearDown() {
-        failureCount = 0
-        successCount = 0
         super.tearDown()
     }
-
-    func test_OnSelection_RouterReceivesCorrectMovie() {
-        let movie = Movie(name: "aaa", rating: 3)
-        presenter2.selectMovie(movie, currentVC: UIViewController())
-        XCTAssertEqual("aaa", mockRouter.movie?.name)
+    
+    func testMovieSectionIs1() {
+        presenter?.loadMovieList(with: fakeMovies)
+        XCTAssertEqual(presenter?.sections, 1)
     }
-
-    func onFailure() {
-        failureCount += 1
+    
+    func testMovieCountIs1() {
+        presenter?.loadMovieList(with: fakeMovies)
+        XCTAssertEqual(presenter?.movieCount, 1)
     }
-
-    func onSuccess() {
-        successCount += 1
+    
+    func testMoveAtIndexIsInjectedMovie() {
+        presenter?.loadMovieList(with: fakeMovies)
+        let movie = presenter?.movie(at: 0)
+        XCTAssertEqual(movie?.name, fakeMovies[0].name)
+        XCTAssertEqual(movie?.rating, fakeMovies[0].rating)
     }
-
-    func test_CallOnSuccessActionsWhenSuccess() {
-        let movie = Movie(name: "ccc", rating: 1.3)
-        let stubMovieResult = Result.success([movie])
-        mockInteractor.result = stubMovieResult
-        presenter2.loadMovies(onSuccess: onSuccess, onFailure: onFailure)
-        XCTAssertEqual(successCount, 1)
-        XCTAssertEqual(failureCount, 0)
+    
+    func testMovieListEmptyShouldShowError() {
+        presenter?.loadMovieList(with: [])
+        XCTAssertEqual(mockInterface?.shouldShowError,
+                       true)
+        XCTAssertEqual(mockInterface?.shouldLoadMovieListWithMovies,
+                       false)
     }
-
-    func test_CallOnFailureActionsWhenFails() {
-        let stubFailedResult: Result<[Movie]> = Result.failure(.noInternet)
-        mockInteractor.result = stubFailedResult
-        presenter2.loadMovies(onSuccess: onSuccess, onFailure: onFailure)
-        XCTAssertEqual(successCount, 0)
-        XCTAssertEqual(failureCount, 1)
+    
+    func testMovieListEmptyShouldShowMovie() {
+        presenter?.loadMovieList(with: fakeMovies)
+        XCTAssertEqual(mockInterface?.shouldShowError,
+                       false)
+        XCTAssertEqual(mockInterface?.shouldLoadMovieListWithMovies,
+                       true)
+    }
+    
+    func testSelectedMovie() {
+        presenter?.loadMovieList(with: fakeMovies)
+        presenter?.selectMovie(fakeMovies[0])
+        XCTAssertEqual(mockRouter.movie?.name, fakeMovies[0].name)
     }
 }
+

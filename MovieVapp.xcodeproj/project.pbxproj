@@ -23,7 +23,11 @@
 		32F51F661FE5D7B4004B7352 /* TopViewControllerGettable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32F51F651FE5D7B4004B7352 /* TopViewControllerGettable.swift */; };
 		32F51F681FE5D7EC004B7352 /* Router.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32F51F671FE5D7EC004B7352 /* Router.swift */; };
 		32F51F6B1FE5E472004B7352 /* CollectionBaseCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32F51F6A1FE5E472004B7352 /* CollectionBaseCell.swift */; };
-		32F51F6D1FE5EDF3004B7352 /* MovieRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32F51F6C1FE5EDF3004B7352 /* MovieRepository.swift */; };
+		32F51F6D1FE5EDF3004B7352 /* MovieClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32F51F6C1FE5EDF3004B7352 /* MovieClient.swift */; };
+		32F51F711FE68AEB004B7352 /* Fakes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32F51F701FE68AEB004B7352 /* Fakes.swift */; };
+		32F51F731FE68B42004B7352 /* Mocks.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32F51F721FE68B42004B7352 /* Mocks.swift */; };
+		32F51F751FE69AC6004B7352 /* MovieListRouterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32F51F741FE69AC6004B7352 /* MovieListRouterTests.swift */; };
+		32F51F771FE6B1EE004B7352 /* MovieDetailRouterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32F51F761FE6B1EE004B7352 /* MovieDetailRouterTests.swift */; };
 		77AE8A0B98C1E1920479F04A /* Pods_MovieVapp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66DE3D8A56D94262E34D700A /* Pods_MovieVapp.framework */; };
 		8A45D940D2BEB66506112617 /* Pods_MovieVappTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C65585D6BB01676E3871EFD5 /* Pods_MovieVappTests.framework */; };
 		9CDE43FE1FD56CD600F57086 /* Result.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CDE43FD1FD56CD600F57086 /* Result.swift */; };
@@ -73,7 +77,11 @@
 		32F51F651FE5D7B4004B7352 /* TopViewControllerGettable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopViewControllerGettable.swift; sourceTree = "<group>"; };
 		32F51F671FE5D7EC004B7352 /* Router.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Router.swift; sourceTree = "<group>"; };
 		32F51F6A1FE5E472004B7352 /* CollectionBaseCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionBaseCell.swift; sourceTree = "<group>"; };
-		32F51F6C1FE5EDF3004B7352 /* MovieRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieRepository.swift; sourceTree = "<group>"; };
+		32F51F6C1FE5EDF3004B7352 /* MovieClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieClient.swift; sourceTree = "<group>"; };
+		32F51F701FE68AEB004B7352 /* Fakes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Fakes.swift; sourceTree = "<group>"; };
+		32F51F721FE68B42004B7352 /* Mocks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Mocks.swift; sourceTree = "<group>"; };
+		32F51F741FE69AC6004B7352 /* MovieListRouterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieListRouterTests.swift; sourceTree = "<group>"; };
+		32F51F761FE6B1EE004B7352 /* MovieDetailRouterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieDetailRouterTests.swift; sourceTree = "<group>"; };
 		66DE3D8A56D94262E34D700A /* Pods_MovieVapp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MovieVapp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		66F4EA7E971C9828B43C575A /* Pods-MovieVapp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MovieVapp.release.xcconfig"; path = "Pods/Target Support Files/Pods-MovieVapp/Pods-MovieVapp.release.xcconfig"; sourceTree = "<group>"; };
 		9CDE43FD1FD56CD600F57086 /* Result.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Result.swift; sourceTree = "<group>"; };
@@ -148,13 +156,13 @@
 			children = (
 				9CDE43FC1FD56CC200F57086 /* Enums and Constants */,
 				32D5147E1FD1F78C00874ADC /* Application */,
+				32F51F6F1FE671E4004B7352 /* Repository */,
 				32D5147F1FD1F79B00874ADC /* MovieList */,
 				9CDE44191FD5742F00F57086 /* MovieDetail */,
 				32D5147D1FD1F76800874ADC /* Entities */,
 				32D5148E1FD3384700874ADC /* Utilities */,
 				32F51F691FE5E429004B7352 /* Convenience Classes */,
 				32D5147C1FD1F76000874ADC /* Resources */,
-				32F51F6C1FE5EDF3004B7352 /* MovieRepository.swift */,
 			);
 			path = MovieVapp;
 			sourceTree = "<group>";
@@ -191,6 +199,7 @@
 		32D5147E1FD1F78C00874ADC /* Application */ = {
 			isa = PBXGroup;
 			children = (
+				9CDE43FD1FD56CD600F57086 /* Result.swift */,
 				32D5145A1FD1F5FC00874ADC /* AppDelegate.swift */,
 				9CDE44591FD6A56C00F57086 /* AppDelegateProtocols.swift */,
 				32F51F651FE5D7B4004B7352 /* TopViewControllerGettable.swift */,
@@ -238,10 +247,17 @@
 			path = View;
 			sourceTree = "<group>";
 		};
+		32F51F6F1FE671E4004B7352 /* Repository */ = {
+			isa = PBXGroup;
+			children = (
+				32F51F6C1FE5EDF3004B7352 /* MovieClient.swift */,
+			);
+			path = Repository;
+			sourceTree = "<group>";
+		};
 		9CDE43FC1FD56CC200F57086 /* Enums and Constants */ = {
 			isa = PBXGroup;
 			children = (
-				9CDE43FD1FD56CD600F57086 /* Result.swift */,
 				9CDE43FF1FD56CFF00F57086 /* MovieEndPoints.swift */,
 			);
 			path = "Enums and Constants";
@@ -272,6 +288,9 @@
 			children = (
 				32D5148F1FD33A2A00874ADC /* MovieListInteractorTests.swift */,
 				32D514911FD33D7300874ADC /* MovieListPresenterTests.swift */,
+				32F51F701FE68AEB004B7352 /* Fakes.swift */,
+				32F51F721FE68B42004B7352 /* Mocks.swift */,
+				32F51F741FE69AC6004B7352 /* MovieListRouterTests.swift */,
 			);
 			path = MovieListTests;
 			sourceTree = "<group>";
@@ -281,6 +300,7 @@
 			children = (
 				9CDE441D1FD589A700F57086 /* MovieDetailInteractorTests.swift */,
 				9CDE44351FD58ED600F57086 /* MovieDetailPresenterTests.swift */,
+				32F51F761FE6B1EE004B7352 /* MovieDetailRouterTests.swift */,
 			);
 			path = MovieDetailTests;
 			sourceTree = "<group>";
@@ -524,7 +544,7 @@
 				9CDE44001FD56CFF00F57086 /* MovieEndPoints.swift in Sources */,
 				32F51F661FE5D7B4004B7352 /* TopViewControllerGettable.swift in Sources */,
 				32D5145B1FD1F5FC00874ADC /* AppDelegate.swift in Sources */,
-				32F51F6D1FE5EDF3004B7352 /* MovieRepository.swift in Sources */,
+				32F51F6D1FE5EDF3004B7352 /* MovieClient.swift in Sources */,
 				32D514891FD2046B00874ADC /* MovieCell.swift in Sources */,
 				9CDE44151FD5742B00F57086 /* MovieDetailInteractor.swift in Sources */,
 				9CDE44581FD6A50000F57086 /* UIColor+Extensions.swift in Sources */,
@@ -550,7 +570,11 @@
 			files = (
 				9CDE441E1FD589A700F57086 /* MovieDetailInteractorTests.swift in Sources */,
 				32D514921FD33D7300874ADC /* MovieListPresenterTests.swift in Sources */,
+				32F51F711FE68AEB004B7352 /* Fakes.swift in Sources */,
 				32D514701FD1F5FC00874ADC /* MovieEntityTests.swift in Sources */,
+				32F51F731FE68B42004B7352 /* Mocks.swift in Sources */,
+				32F51F771FE6B1EE004B7352 /* MovieDetailRouterTests.swift in Sources */,
+				32F51F751FE69AC6004B7352 /* MovieListRouterTests.swift in Sources */,
 				9CDE44361FD58ED600F57086 /* MovieDetailPresenterTests.swift in Sources */,
 				32D514901FD33A2A00874ADC /* MovieListInteractorTests.swift in Sources */,
 			);
@@ -692,6 +716,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = V9295U77G2;
+				GCC_GENERATE_TEST_COVERAGE_FILES = NO;
 				INFOPLIST_FILE = "$(SRCROOT)/MovieVapp/Resources/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.haiyanma.MovieVapp;
@@ -708,6 +733,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = V9295U77G2;
+				GCC_GENERATE_TEST_COVERAGE_FILES = NO;
 				INFOPLIST_FILE = "$(SRCROOT)/MovieVapp/Resources/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.haiyanma.MovieVapp;

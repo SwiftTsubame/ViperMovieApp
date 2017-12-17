@@ -65,7 +65,7 @@ extension MovieListPresenter: MovieListInteractionOutput {
         self.movies = movies
     }
     
-    func showLoadingMovieListError(_ error: ErrorType) {
+    func showLoadingMovieListError(_ error: MovieErrorType) {
         movieListViewInterface?.showLoadingError(errorMessage: "Some Error occured")
     }
 }

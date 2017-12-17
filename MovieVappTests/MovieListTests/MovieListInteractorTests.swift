@@ -11,37 +11,87 @@ import XCTest
 
 class MovieListInteractorTests: XCTestCase {
 
-    class MockMovieListInteractor: MovieListInteraction {
-
-        func getMovies() -> [Movie] {
-            return []
+    class FakeInteractionOutput: MovieListInteractionOutput {
+        var movies: [Movie]?
+        
+        var error: MovieErrorType?
+        
+        func loadMovieList(with movies: [Movie]) {
+            self.movies = movies
         }
-
-        var result: Result<[Movie]>?
-
-        func loadMovies(endPoint: Endpoint, completion: (Result<[Movie]>) -> Void) {
-            completion(result!)
+        
+        func showLoadingMovieListError(_ error: MovieErrorType) {
+            self.error = error
         }
     }
-
-    var mockMovieListInteractor: MockMovieListInteractor?
-
+    
+    class FakeClient: MovieClient {
+        var fakeResult: Result<[Movie]>?
+        
+        override func getMovieList(from endPoint: Endpoint, completion: (Result<[Movie]>) -> Void) {
+            guard let result = fakeResult else {
+                XCTFail("Didnot supply fake result in Fake MovieList Client")
+                return
+            }
+            completion(result)
+        }
+    }
+    
+    struct MockMovieListResult {
+        static let errorResult: Result<[Movie]> = Result.failure(MovieErrorType.noInternet)
+        static let successfulResult: Result<[Movie]> = Result.success([Movie(name: "abc", rating: 1.3),
+                                                                       Movie(name: "efg", rating: 2.5)])
+    }
+    
+    var subject: MovieListInteractor!
+    let fakeClient = FakeClient()
+    let fakeOutput = FakeInteractionOutput()
     override func setUp() {
         super.setUp()
-        mockMovieListInteractor = MockMovieListInteractor()
+        subject = MovieListInteractor(client: fakeClient)
+        subject.output = fakeOutput
     }
-
-    func test_NonEmptyMovieListLoaded() {
-        let movie = Movie(name: "abc", rating: 1.3)
-        let stubMovieResult = Result.success([movie])
-        mockMovieListInteractor?.result = stubMovieResult
-        mockMovieListInteractor?.loadMovies(endPoint: .movieList, completion: { (result) in
-            switch result {
-            case .success(let movies):
-                XCTAssertEqual(1, movies.count)
-            case .failure:
-                XCTFail("This test should have succeeded")
-            }
-        })
+    
+    func testLoadMovieReturnsMoviesUponSuccess() {
+        fakeClient.fakeResult = MockMovieListResult.successfulResult
+        subject.loadMovies(endPoint: .movieList)
+        guard let movies = subject.movies else {
+            XCTFail("Nil Movie List Returned")
+            return
+        }
+        XCTAssertEqual(movies.count, 2)
+        XCTAssertEqual(movies.map{ $0.name }, ["abc", "efg"])
+        XCTAssertEqual(movies.map{ $0.rating }, [1.3, 2.5])
+    }
+    
+    func testLoadMovieSuccessCaughtInOutput() {
+        fakeClient.fakeResult = MockMovieListResult.successfulResult
+        subject.loadMovies(endPoint: .movieList)
+        let successfulResult = MockMovieListResult.successfulResult
+        guard let outPutMovies = fakeOutput.movies else {
+            XCTFail("Output has caught no movies")
+            return
+        }
+        switch successfulResult {
+        case .success(let movies):
+            XCTAssertEqual(movies.count, fakeOutput.movies?.count)
+            XCTAssertEqual(movies.map{ $0.name }, outPutMovies.map{ $0.name })
+            XCTAssertEqual(movies.map{ $0.rating },
+                         outPutMovies.map{ $0.rating })
+        default:
+            XCTFail("should be case success instead failure")
+        }
+    }
+    
+    func testLoadMovieFailureCaughtInOutput() {
+        fakeClient.fakeResult = MockMovieListResult.errorResult
+        subject.loadMovies(endPoint: .movieList)
+        let errorResult = MockMovieListResult.errorResult
+        switch errorResult {
+        case .failure(let errorType):
+            XCTAssertEqual(fakeOutput.error, errorType)
+        default:
+            XCTFail("should be case failure instead success")
+        }
     }
 }

@@ -15,30 +15,29 @@ protocol MovieListInteraction {
 protocol MovieListInteractionOutput: class {
     var movies: [Movie]? { get }
     func loadMovieList(with movies: [Movie])
-    func showLoadingMovieListError(_ error: ErrorType)
+    func showLoadingMovieListError(_ error: MovieErrorType)
 }
 
 class MovieListInteractor: MovieListInteraction {
 
     weak var output: MovieListInteractionOutput?
     
-    private(set) var movies: [Movie]? {
-        didSet {
-        }
-    }
-
-    func loadMovies(endPoint: Endpoint) {
-        switch resultMovies() {
-        case .success(let movies):
-            output?.loadMovieList(with: movies)
-        case .failure(let errorType):
-            output?.showLoadingMovieListError(errorType)
-        }
+    private(set) var movies: [Movie]?
+    private let client: MovieClient
+    
+    init(client: MovieClient = MovieClient.shared) {
+        self.client = client
     }
     
-    private func resultMovies() -> Result<[Movie]> {
-        self.movies = MovieRepository.shared.movies
-        let result = Result.success(MovieRepository.shared.movies)
-        return result
+    func loadMovies(endPoint: Endpoint) {
+        client.getMovieList(from: endPoint) { (result) in
+            switch result {
+            case .success(let movies):
+                self.movies = movies
+                output?.loadMovieList(with: movies)
+            case .failure(let errorType):
+                output?.showLoadingMovieListError(errorType)
+            }
+        }
     }
 }

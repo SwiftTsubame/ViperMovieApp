@@ -8,11 +8,11 @@
 
 import Foundation
 
-enum ErrorType: Error {
+public enum MovieErrorType: Error {
     case noInternet
 }
 
 enum Result<T> {
     case success(T)
-    case failure(ErrorType)
+    case failure(MovieErrorType)
 }

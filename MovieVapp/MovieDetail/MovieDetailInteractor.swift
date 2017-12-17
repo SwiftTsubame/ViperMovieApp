@@ -25,9 +25,11 @@ class MovieDetailInteractor: MovieDetailInteraction {
         updateMovieRepository(with: movie)
     }
     
-    func updateMovieRepository(with newMovie: Movie) {
-        let moviesNames = MovieRepository.shared.movies.map { $0.name }
+    private func updateMovieRepository(with newMovie: Movie) {
+        let moviesNames = MovieClient.shared.getMovies().map { $0.name }
         guard let index = moviesNames.index(of: newMovie.name) else { return }
-        MovieRepository.shared.movies[index] = newMovie
+        var movies = MovieClient.shared.getMovies()
+        movies[index] = newMovie
+        MovieClient.shared.setMovies(movies)
     }
 }

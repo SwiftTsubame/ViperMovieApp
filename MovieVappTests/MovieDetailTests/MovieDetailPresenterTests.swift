@@ -13,37 +13,74 @@ class MovieDetailPresenterTests: XCTestCase {
 
     var movieDetailPresenter: MovieDetailPresenter!
 
-    class MockMovieDetailInteractor: MovieDetailInteraction {
+    class MockInteractor: MovieDetailInteraction {
         var movie: Movie?
+        var toggleFavoriteCalled = false
+        func toggleFavorite() {
+            toggleFavoriteCalled = true
+        }
     }
+    
+    class MockRouter: MovieDetailRouting {
+        
+    }
+    
+    class MockInterface: MovieDetailViewInterface {
+        var presenter: MovieDetailPresentation?
+        
+        var shouldShowNoMovieError = false
+        var shouldShowMovieDetail = false
 
-    class MockRouter: MovieDetailRouting { }
-
-    let mockInteractor = MockMovieDetailInteractor()
-    let mockRouter = MockRouter()
-
+        func showNoMovieError() {
+            shouldShowNoMovieError = true
+        }
+        
+        func showMovieDetail(movie: Movie) {
+            shouldShowMovieDetail = true
+        }
+    }
+    
+    
+    var mockInteractor = MockInteractor()
+    var mockRouter = MockRouter()
+    var mockInterface = MockInterface()
     override func setUp() {
         super.setUp()
         movieDetailPresenter = MovieDetailPresenter(interactor: mockInteractor, router: mockRouter)
+        movieDetailPresenter.viewInterface = mockInterface
     }
-
-    func testShowMovieDetailHandleFailureWhenNoMovie() {
+    
+    override func tearDown() {
+        mockInterface = MockInterface()
+        super.tearDown()
+    }
+    
+    func testViewInterfaceShowErrorWhenNoMovie() {
         mockInteractor.movie = nil
-
-        movieDetailPresenter.showDetailOnViewDidLoad(withMovie: { (_) in
-            XCTAssertTrue(false, "test should fail because we have no movie")
-        }, noMovie: {
-            XCTAssertTrue(true, "failed as we want")
-        })
+        movieDetailPresenter.prepareToShowMovieDetail()
+        XCTAssertEqual(mockInterface.shouldShowNoMovieError, true)
+        XCTAssertEqual(mockInterface.shouldShowMovieDetail, false)
     }
-
-    func testShowMovieDetailSucceedsWithMovie() {
-        mockInteractor.movie = Movie(name: "There is movie!", rating: 23)
-        movieDetailPresenter.showDetailOnViewDidLoad(withMovie: { (passedMovie) in
-            XCTAssertEqual(mockInteractor.movie?.name, passedMovie.name)
-        }, noMovie: {
-            XCTAssertTrue(false, "test should NOT fail because there is movie")
-        })
+    
+    func testViewInterfaceShowMovieWhenSuccess() {
+        mockInteractor.movie = Movie(name: "abc", rating: 4)
+        movieDetailPresenter.prepareToShowMovieDetail()
+        XCTAssertEqual(mockInterface.shouldShowNoMovieError, false)
+        XCTAssertEqual(mockInterface.shouldShowMovieDetail, true)
     }
-
+    
+    func testToggleFavoriteWillTriggerInteractorToggleCall() {
+        XCTAssertEqual(mockInteractor.toggleFavoriteCalled, false)
+        movieDetailPresenter.toggleFavorite()
+        XCTAssertEqual(mockInteractor.toggleFavoriteCalled, true)
+    }
+    
+    func testIsFavoriteValueAgreesWithInteractorMovieValue() {
+        mockInteractor.movie = Movie(name: "abc", rating: 4)
+        XCTAssertEqual(movieDetailPresenter.isFavorite, false)
+        
+        mockInteractor.movie = Movie(name: "abc", rating: 4, isFavorite: true)
+        XCTAssertEqual(movieDetailPresenter.isFavorite, true)
+    }
 }
+
