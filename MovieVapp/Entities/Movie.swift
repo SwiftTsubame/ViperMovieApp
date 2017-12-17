@@ -11,4 +11,11 @@ import Foundation
 struct Movie {
     let name: String
     let rating: Float
+    var isFavorite: Bool = false
+    
+    init(name: String, rating: Float, isFavorite: Bool = false) {
+        self.name = name
+        self.rating = rating
+        self.isFavorite = isFavorite
+    }
 }

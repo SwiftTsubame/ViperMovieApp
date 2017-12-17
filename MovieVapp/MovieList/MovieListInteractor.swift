@@ -9,25 +9,36 @@
 import Foundation
 
 protocol MovieListInteraction {
-    func loadMovies(endPoint: Endpoint, completion: (Result<[Movie]>) -> Void)
-    func allMovies() -> [Movie]
+    func loadMovies(endPoint: Endpoint)
+}
+
+protocol MovieListInteractionOutput: class {
+    var movies: [Movie]? { get }
+    func loadMovieList(with movies: [Movie])
+    func showLoadingMovieListError(_ error: ErrorType)
 }
 
 class MovieListInteractor: MovieListInteraction {
 
-    private var movies: [Movie]?
-
-    func allMovies() -> [Movie] {
-        return movies ?? []
+    weak var output: MovieListInteractionOutput?
+    
+    private(set) var movies: [Movie]? {
+        didSet {
+        }
     }
 
-    func loadMovies(endPoint: Endpoint, completion: (Result<[Movie]>) -> Void) {
-        let movie1 = Movie(name: "Avatar", rating: 4.5)
-        let movie2 = Movie(name: "Jurassic World", rating: 4.1)
-        let movie3 = Movie(name: "Titanic", rating: 3.9)
-        let movies = [movie1, movie2, movie3]
-        let result: Result<[Movie]> = Result.success(movies)
-        self.movies = movies
-        completion(result)
+    func loadMovies(endPoint: Endpoint) {
+        switch resultMovies() {
+        case .success(let movies):
+            output?.loadMovieList(with: movies)
+        case .failure(let errorType):
+            output?.showLoadingMovieListError(errorType)
+        }
+    }
+    
+    private func resultMovies() -> Result<[Movie]> {
+        self.movies = MovieRepository.shared.movies
+        let result = Result.success(MovieRepository.shared.movies)
+        return result
     }
 }

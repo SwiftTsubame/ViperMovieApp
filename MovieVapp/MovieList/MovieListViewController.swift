@@ -8,15 +8,25 @@
 
 import UIKit
 
+protocol MovieListViewInterface: class {
+    func loadMovieListWithMovies()
+    func showLoadingError(errorMessage: String)
+}
+
 class MovieListCollectionViewController: UICollectionViewController {
 
     var presenter: MovieListPresentation?
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setupCollectionView()
         title = "Movies"
-        loadMovieList()
+        presenter?.loadMovies()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        presenter?.loadMovies()
     }
 
     private func setupCollectionView() {
@@ -25,13 +35,16 @@ class MovieListCollectionViewController: UICollectionViewController {
         collectionView?.showsVerticalScrollIndicator = true
         collectionView?.register(MovieCell.self, forCellWithReuseIdentifier: MovieCell.nameString)
     }
+}
 
-    private func loadMovieList() {
-        presenter?.loadMovies(onSuccess: { [weak self] in
-            self?.collectionView?.reloadData()
-            }, onFailure: {
-                print("failure, handle failure in UI")
-        })
+extension MovieListCollectionViewController: MovieListViewInterface {
+
+    func loadMovieListWithMovies() {
+        self.collectionView?.reloadData()
+    }
+    
+    func showLoadingError(errorMessage: String) {
+        print("show error messagae: \(errorMessage)")
     }
 }
 
@@ -60,7 +73,7 @@ extension MovieListCollectionViewController: UICollectionViewDelegateFlowLayout 
     // Delegate
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if let movie = presenter?.movie(at: indexPath.item) {
-            presenter?.selectMovie(movie, currentVC: self)
+            presenter?.selectMovie(movie)
         }
     }
 

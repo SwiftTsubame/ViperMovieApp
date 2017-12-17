@@ -16,6 +16,10 @@ class ListDependencyContainer {
     func makeMovieListViewController() -> MovieListCollectionViewController {
         let m = MovieListCollectionViewController(collectionViewLayout: UICollectionViewFlowLayout())
         m.presenter = presenter
+        
+        presenter.movieListViewInterface = m
+        interactor.output = presenter
+        
         return m
     }
 }

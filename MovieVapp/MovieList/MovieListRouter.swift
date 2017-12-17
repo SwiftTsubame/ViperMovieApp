@@ -10,14 +10,18 @@ import UIKit
 
 protocol MovieListRouting: class {
     var container: MovieDetailDependencyContainer { get set }
-    func presentMovieDetailView(with movie: Movie, fromVC: UIViewController)
+    func presentMovieDetailView(with movie: Movie)
 }
 
-class MovieListRouter: MovieListRouting {
+class MovieListRouter: Router, MovieListRouting {
+    
     var container = MovieDetailDependencyContainer()
+    
+    let listContainer = ListDependencyContainer()
 
-    func presentMovieDetailView(with movie: Movie, fromVC: UIViewController) {
+    func presentMovieDetailView(with movie: Movie) {
         let detailVC = container.createModule(for: movie)
-        fromVC.navigationController?.pushViewController(detailVC, animated: true)
+        guard let listViewVC = topNavController else { return }
+        listViewVC.pushViewController(detailVC, animated: true)
     }
 }

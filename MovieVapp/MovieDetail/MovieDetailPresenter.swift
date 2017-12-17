@@ -14,24 +14,36 @@ import UIKit
 protocol MovieDetailPresentation: class {
     var interactor: MovieDetailInteraction { get }
     var router: MovieDetailRouting { get }
-    func showDetailOnViewDidLoad(withMovie: (Movie) -> Void, noMovie: () -> Void)
+    func prepareToShowMovieDetail()
+    func toggleFavorite()
+    var isFavorite: Bool { get }
 }
 
 class MovieDetailPresenter: MovieDetailPresentation {
+
     var interactor: MovieDetailInteraction
     var router: MovieDetailRouting
-
+    weak var viewInterface: MovieDetailViewInterface?
+    
     init(interactor: MovieDetailInteraction,
          router: MovieDetailRouting) {
         self.interactor = interactor
         self.router = router
     }
 
-    func showDetailOnViewDidLoad(withMovie: (Movie) -> Void, noMovie: () -> Void) {
+    func prepareToShowMovieDetail() {
         guard let selectedMovie = interactor.movie else {
-            noMovie()
+            viewInterface?.showNoMovieError()
             return
         }
-        withMovie(selectedMovie)
+        viewInterface?.showMovieDetail(movie: selectedMovie)
+    }
+    
+    func toggleFavorite() {
+        interactor.toggleFavorite()
+    }
+    
+    var isFavorite: Bool {
+        return interactor.movie?.isFavorite ?? false
     }
 }

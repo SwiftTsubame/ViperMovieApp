@@ -19,6 +19,7 @@ class MovieDetailDependencyContainer {
         let view = MovieDetailViewController(nibName: nil, bundle: nil)
         view.presenter = presenter
         interactor.movie = movie
+        presenter.viewInterface = view
         return view
     }
 }
