@@ -19,7 +19,6 @@ class ListDependencyContainer {
         
         presenter.movieListViewInterface = m
         interactor.output = presenter
-        
         return m
     }
 }

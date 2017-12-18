@@ -19,3 +19,11 @@ struct Movie {
         self.isFavorite = isFavorite
     }
 }
+
+extension Movie: Equatable {
+    static func ==(lhs: Movie, rhs: Movie) -> Bool {
+        return lhs.name == rhs.name &&
+                lhs.rating == rhs.rating &&
+                lhs.isFavorite == rhs.isFavorite
+    }
+}

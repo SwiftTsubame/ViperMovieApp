@@ -19,8 +19,9 @@ class MovieListCollectionViewController: UICollectionViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupCollectionView()
         title = "Movies"
+        setupCollectionView()
+        setupSortingNavigationButton()
         presenter?.loadMovies()
     }
     
@@ -34,6 +35,15 @@ class MovieListCollectionViewController: UICollectionViewController {
         collectionView?.alwaysBounceVertical = true
         collectionView?.showsVerticalScrollIndicator = true
         collectionView?.register(MovieCell.self, forCellWithReuseIdentifier: MovieCell.nameString)
+    }
+
+    private func setupSortingNavigationButton() {
+        let sortButton = UIBarButtonItem(title: "Sort", style: .done, target: self, action: #selector(handleSortingTapped))
+        navigationItem.rightBarButtonItem = sortButton
+    }
+
+    @objc private func handleSortingTapped() {
+        print("Sort Tapped")
     }
 }
 
