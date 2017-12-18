@@ -16,7 +16,7 @@ class MovieListInteractorTests: XCTestCase {
         
         var error: MovieErrorType?
         
-        func loadMovieList(with movies: [Movie]) {
+        func refreshMovieList(with movies: [Movie]) {
             self.movies = movies
         }
         
@@ -26,10 +26,11 @@ class MovieListInteractorTests: XCTestCase {
     }
     
     class FakeClient: MovieClient {
-        var fakeResult: Result<[Movie]>?
+
+        var result: Result<[Movie]>?
         
         override func getMovieList(from endPoint: Endpoint, completion: (Result<[Movie]>) -> Void) {
-            guard let result = fakeResult else {
+            guard let result = result else {
                 XCTFail("Didnot supply fake result in Fake MovieList Client")
                 return
             }
@@ -37,59 +38,68 @@ class MovieListInteractorTests: XCTestCase {
         }
     }
     
-    struct MockMovieListResult {
+    struct StubMovieListResult {
         static let errorResult: Result<[Movie]> = Result.failure(MovieErrorType.noInternet)
-        static let successfulResult: Result<[Movie]> = Result.success([Movie(name: "abc", rating: 1.3),
-                                                                       Movie(name: "efg", rating: 2.5)])
+        static let successfulResult: Result<[Movie]> = Result.success(StubMovieListResult.movies)
+        static let movies = [Movie(name: "abc", rating: 1.3, imageName: "avatar"),
+                             Movie(name: "efg", rating: 2.5, imageName: "avatar"),
+                             Movie(name: "bbbfg", rating: 2.5, imageName: "avatar")]
+
     }
     
     var subject: MovieListInteractor!
     let fakeClient = FakeClient()
-    let fakeOutput = FakeInteractionOutput()
+    let fakeInteractorOutput = FakeInteractionOutput()
+
     override func setUp() {
         super.setUp()
         subject = MovieListInteractor(client: fakeClient)
-        subject.output = fakeOutput
+        subject.output = fakeInteractorOutput
     }
     
     func testLoadMovieReturnsMoviesUponSuccess() {
-        fakeClient.fakeResult = MockMovieListResult.successfulResult
+        // Feed correct list of movies in movie client
+        fakeClient.result = StubMovieListResult.successfulResult
+        // Load movies
         subject.loadMovies(endPoint: .movieList)
+        // Returned movies are caught correctly in the subject under test
         guard let movies = subject.movies else {
             XCTFail("Nil Movie List Returned")
             return
         }
-        XCTAssertEqual(movies.count, 2)
-        XCTAssertEqual(movies.map{ $0.name }, ["abc", "efg"])
-        XCTAssertEqual(movies.map{ $0.rating }, [1.3, 2.5])
+        XCTAssertEqual(movies, StubMovieListResult.movies)
     }
     
-    func testLoadMovieSuccessCaughtInOutput() {
-        fakeClient.fakeResult = MockMovieListResult.successfulResult
+    func test_LoadMovieSuccessful_MoviesAreCaughtInOutput() {
+        // Feed correct list of movies in movie client
+        let successfulResult = StubMovieListResult.successfulResult
+        fakeClient.result = successfulResult
+        // Load movies
         subject.loadMovies(endPoint: .movieList)
-        let successfulResult = MockMovieListResult.successfulResult
-        guard let outPutMovies = fakeOutput.movies else {
+
+        // Catch Movies in Output Protocol
+        guard let moviesCaughtInInteractionOutputProtocol = fakeInteractorOutput.movies else {
             XCTFail("Output has caught no movies")
             return
         }
         switch successfulResult {
         case .success(let movies):
-            XCTAssertEqual(movies.count, fakeOutput.movies?.count)
-            XCTAssertEqual(movies.map{ $0.name }, outPutMovies.map{ $0.name })
-            XCTAssertEqual(movies.map{ $0.rating },
-                         outPutMovies.map{ $0.rating })
+            XCTAssertEqual(movies, moviesCaughtInInteractionOutputProtocol)
         default:
             XCTFail("should be case success instead failure")
         }
     }
     
-    func testLoadMovieFailureCaughtInOutput() {
-        fakeClient.fakeResult = MockMovieListResult.errorResult
+    func test_LoadMovieFailed_ErrorCaughtInOutput() {
+        // Feed error Result in loading movies
+        let feedErrorResult = StubMovieListResult.errorResult
+        fakeClient.result = feedErrorResult
+        // Load movies
         subject.loadMovies(endPoint: .movieList)
-        let errorResult = MockMovieListResult.errorResult
-        switch errorResult {
+        // Catch Error in Output Protocol
+        switch feedErrorResult {
         case .failure(let errorType):
-            XCTAssertEqual(fakeOutput.error, errorType)
+            XCTAssertEqual(fakeInteractorOutput.error, errorType)
         default:
             XCTFail("should be case failure instead success")
         }

@@ -17,6 +17,12 @@ class MovieListPresenterTests: XCTestCase {
     }
     
     class MockRouter: MovieListRouting {
+
+        var alertController: AlertController = AlertController()
+
+        func presentSortOptions(sortCompletion: ((SortType) -> ())?) {
+        }
+
         var container: MovieDetailDependencyContainer = MovieDetailDependencyContainer()
         var movie: Movie?
         func presentMovieDetailView(with movie: Movie) {
@@ -28,7 +34,7 @@ class MovieListPresenterTests: XCTestCase {
         var shouldLoadMovieListWithMovies = false
         var shouldShowError = false
 
-        func loadMovieListWithMovies() {
+        func refreshMovieList() {
             shouldLoadMovieListWithMovies = true
         }
         
@@ -40,7 +46,7 @@ class MovieListPresenterTests: XCTestCase {
     var presenter: MovieListPresenter?
     let mockInteractor = MockInteracotr()
     let mockRouter = MockRouter()
-    let fakeMovies = [Movie(name: "aaa", rating: 1)]
+    let fakeMovies = [Movie(name: "aaa", rating: 1, imageName: "avatar")]
     var mockInterface: MockInterface?
     
     override func setUp() {
@@ -55,24 +61,24 @@ class MovieListPresenterTests: XCTestCase {
     }
     
     func testMovieSectionIs1() {
-        presenter?.loadMovieList(with: fakeMovies)
+        presenter?.refreshMovieList(with: fakeMovies)
         XCTAssertEqual(presenter?.sections, 1)
     }
     
     func testMovieCountIs1() {
-        presenter?.loadMovieList(with: fakeMovies)
+        presenter?.refreshMovieList(with: fakeMovies)
         XCTAssertEqual(presenter?.movieCount, 1)
     }
     
     func testMoveAtIndexIsInjectedMovie() {
-        presenter?.loadMovieList(with: fakeMovies)
+        presenter?.refreshMovieList(with: fakeMovies)
         let movie = presenter?.movie(at: 0)
         XCTAssertEqual(movie?.name, fakeMovies[0].name)
         XCTAssertEqual(movie?.rating, fakeMovies[0].rating)
     }
     
     func testMovieListEmptyShouldShowError() {
-        presenter?.loadMovieList(with: [])
+        presenter?.refreshMovieList(with: [])
         XCTAssertEqual(mockInterface?.shouldShowError,
                        true)
         XCTAssertEqual(mockInterface?.shouldLoadMovieListWithMovies,
@@ -80,7 +86,7 @@ class MovieListPresenterTests: XCTestCase {
     }
     
     func testMovieListEmptyShouldShowMovie() {
-        presenter?.loadMovieList(with: fakeMovies)
+        presenter?.refreshMovieList(with: fakeMovies)
         XCTAssertEqual(mockInterface?.shouldShowError,
                        false)
         XCTAssertEqual(mockInterface?.shouldLoadMovieListWithMovies,
@@ -88,7 +94,7 @@ class MovieListPresenterTests: XCTestCase {
     }
     
     func testSelectedMovie() {
-        presenter?.loadMovieList(with: fakeMovies)
+        presenter?.refreshMovieList(with: fakeMovies)
         presenter?.selectMovie(fakeMovies[0])
         XCTAssertEqual(mockRouter.movie?.name, fakeMovies[0].name)
     }

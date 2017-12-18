@@ -35,9 +35,6 @@ class AlertController: AlertControllable {
                                         handler: { _ in
                                             self.sortCompletion?(SortType.rating)}))
 
-        alert.addAction(alertActionWith(name: "Favorite",
-                                        handler: { _ in
-                                            self.sortCompletion?(SortType.favorite) }))
         alert.addAction(alertActionWith(name: "Cancel",
                                         style: .cancel,
                                         handler: nil))

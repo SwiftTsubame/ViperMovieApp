@@ -1,4 +1,3 @@
-//
 //  MovieRepository.swift
 //  MovieVapp
 //
@@ -12,10 +11,10 @@ class MovieClient {
     
     static var shared = MovieClient()
 
-    private var movies: [Movie] = [Movie(name: "Avatar", rating: 4.5),
-                                   Movie(name: "Jurassic World", rating: 4.1, isFavorite: true),
-                                   Movie(name: "Titanic", rating: 3.9)]
-    
+    private var movies: [Movie] = [Movie(name: "Avatar", rating: 3.5, imageName: "avatar"),
+                                   Movie(name: "Jurassic World", rating: 2.1, isFavorite: true, imageName: "jurassicPark"),
+                                   Movie(name: "Changeling", rating: 3.9, imageName: "changeling")]
+
     func getMovieList(from endPoint: Endpoint, completion: (_ result: Result<[Movie]>) -> Void) {
         let result = Result.success(movies)
         completion(result)

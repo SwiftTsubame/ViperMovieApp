@@ -12,7 +12,7 @@ import XCTest
 class MovieDetailInteractorTests: XCTestCase {
 
     var subject: MovieDetailInteractor!
-    let fakeMovie = Movie(name: "Avatar", rating: 4.5)
+    let fakeMovie = Movie(name: "Avatar", rating: 4.5, imageName: "avatar")
     
     override func setUp() {
         super.setUp()

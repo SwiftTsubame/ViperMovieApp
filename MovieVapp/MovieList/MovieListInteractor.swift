@@ -15,7 +15,7 @@ protocol MovieListInteraction {
 
 protocol MovieListInteractionOutput: class {
     var movies: [Movie]? { get }
-    func loadMovieList(with movies: [Movie])
+    func refreshMovieList(with movies: [Movie])
     func showLoadingMovieListError(_ error: MovieErrorType)
 }
 
@@ -35,7 +35,7 @@ class MovieListInteractor: MovieListInteraction {
             switch result {
             case .success(let movies):
                 self.movies = movies
-                output?.loadMovieList(with: movies)
+                output?.refreshMovieList(with: movies)
             case .failure(let errorType):
                 output?.showLoadingMovieListError(errorType)
             }
@@ -43,8 +43,17 @@ class MovieListInteractor: MovieListInteraction {
     }
 
     func sortMovies(sortType: SortType) {
-        print("interactor is sorting movies on type: \(sortType)")
+        switch sortType {
+        case .name:
+            self.movies = self.movies?.sorted(by: {
+                $0.name < $1.name
+            })
+        case .rating:
+            self.movies = self.movies?.sorted(by: {
+                $0.rating < $1.rating
+            })
+        default: break
+        }
+        output?.refreshMovieList(with: self.movies ?? [])
     }
-
-
 }

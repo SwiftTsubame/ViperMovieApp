@@ -35,7 +35,7 @@ class MovieListPresenter: MovieListPresentation {
                 movieListViewInterface?.showLoadingError(errorMessage: "No movie Loaded")
                 return
             }
-            movieListViewInterface?.loadMovieListWithMovies()
+            movieListViewInterface?.refreshMovieList()
         }
     }
 
@@ -61,7 +61,6 @@ class MovieListPresenter: MovieListPresentation {
     }
 
     func showSortingOptions() {
-        print("show sorting options")
         router.presentSortOptions { [weak self] (sortType) in
             self?.interactor.sortMovies(sortType: sortType)
         }
@@ -69,7 +68,11 @@ class MovieListPresenter: MovieListPresentation {
 }
 
 extension MovieListPresenter: MovieListInteractionOutput {
-    func loadMovieList(with movies: [Movie]) {
+    func refreshMovieListAfterSorting(_ movies: [Movie]) {
+        self.movies = movies
+    }
+
+    func refreshMovieList(with movies: [Movie]) {
         self.movies = movies
     }
     

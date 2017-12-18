@@ -16,7 +16,7 @@ class MovieEntityTests: XCTestCase {
     }
 
     func testMovieSetGet() {
-        let movie = Movie(name: "Interstella", rating: 5)
+        let movie = Movie(name: "Interstella", rating: 5, imageName: "avatar")
         XCTAssertEqual(movie.name, "Interstella")
         XCTAssertEqual(movie.rating, 5)
     }

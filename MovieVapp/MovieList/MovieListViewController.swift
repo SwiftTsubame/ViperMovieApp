@@ -9,7 +9,7 @@
 import UIKit
 
 protocol MovieListViewInterface: class {
-    func loadMovieListWithMovies()
+    func refreshMovieList()
     func showLoadingError(errorMessage: String)
 }
 
@@ -43,19 +43,24 @@ class MovieListCollectionViewController: UICollectionViewController {
     }
 
     @objc private func handleSortingTapped() {
-        print("Sort Tapped")
         presenter?.showSortingOptions()
     }
 }
 
 extension MovieListCollectionViewController: MovieListViewInterface {
 
-    func loadMovieListWithMovies() {
+    func refreshMovieList() {
         self.collectionView?.reloadData()
     }
     
     func showLoadingError(errorMessage: String) {
         print("show error messagae: \(errorMessage)")
+    }
+}
+
+extension MovieListCollectionViewController: CellInterfaceDelegate {
+    func toggleFavoriteMovie() {
+
     }
 }
 
@@ -92,6 +97,12 @@ extension MovieListCollectionViewController: UICollectionViewDelegateFlowLayout 
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
                         sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: collectionView.frame.width, height: 50)
+        let width = collectionView.frame.width / 2.2
+        let height = width * 1.48
+        return CGSize(width: width, height: height)
+    }
+
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
+        return UIEdgeInsets(top: 8, left: 8, bottom: 8, right: 8)
     }
 }

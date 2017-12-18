@@ -8,12 +8,20 @@
 
 import UIKit
 
+protocol CellInterfaceDelegate: class {
+    func toggleFavoriteMovie()
+}
+
 class MovieCell: BaseCell {
 
     let titleLabel: UILabel = {
         let lb = UILabel()
-        lb.numberOfLines = 1
+        lb.numberOfLines = 0
         lb.lineBreakMode = .byTruncatingTail
+        lb.textAlignment = .center
+        lb.textColor = .white
+        lb.font = UIFont.boldSystemFont(ofSize: 15)
+        lb.backgroundColor = UIColor(white: 0.4, alpha: 0.7)
         return lb
     }()
     
@@ -21,36 +29,44 @@ class MovieCell: BaseCell {
         let iv = UIImageView()
         iv.contentMode = .scaleAspectFill
         iv.clipsToBounds = true
+        iv.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleTapFavorite)))
         return iv
     }()
 
-    let bottomSeparationLine: UIView = {
-        let view = UIView()
-        view.backgroundColor = UIColor.themePurple()
-        return view
+    let backgroundImageView: UIImageView = {
+        let iv = UIImageView()
+        iv.contentMode = .scaleAspectFill
+        iv.clipsToBounds = true
+        return iv
     }()
+
+    weak var cellInterfaceDelegate: CellInterfaceDelegate?
 
     override func setupViews() {
         super.setupViews()
-        addSubViewList(titleLabel, bottomSeparationLine, favoriteImageView)
-        titleLabel.anchorWithConstantsToTop(topAnchor,
-                                            left: leftAnchor,
-                                            bottom: bottomAnchor,
-                                            right: rightAnchor,
-                                            topConstant: 0,
-                                            leftConstant: 16,
-                                            bottomConstant: 0,
-                                            rightConstant: 16)
-        
-        _ = favoriteImageView.anchor(top: nil, left: nil, bottom: nil, right: rightAnchor, topConstant: 0, leftConstant: 0, bottomConstant: 0, rightConstant: 16, widthConstant: 30, heightConstant: 30)
-        favoriteImageView.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
+        configCellLayer()
+        addSubViewList(backgroundImageView, titleLabel, favoriteImageView)
+        backgroundImageView.fillSuperview()
 
-        bottomSeparationLine.anchorToTop(top: nil, left: leftAnchor, bottom: bottomAnchor, right: rightAnchor)
-        bottomSeparationLine.heightAnchor.constraint(equalToConstant: 1.0).isActive = true
+        titleLabel.anchorWithConstantsToTop(nil, left: leftAnchor, bottom: bottomAnchor, right: rightAnchor, topConstant: 0, leftConstant: 0, bottomConstant: 8, rightConstant: 0)
+        titleLabel.heightAnchor.constraint(equalToConstant: 30).isActive = true
+        
+        _ = favoriteImageView.anchor(top: topAnchor, left: nil, bottom: nil, right: rightAnchor, topConstant: 8, leftConstant: 0, bottomConstant: 0, rightConstant: 8, widthConstant: 28, heightConstant: 28)
+    }
+
+    private func configCellLayer() {
+        layer.cornerRadius = 6
+        layer.masksToBounds = true
     }
 
     func configCell(_ movie: Movie?) {
         titleLabel.text = movie?.name
         favoriteImageView.image = movie?.isFavorite == true ? #imageLiteral(resourceName: "heart") : #imageLiteral(resourceName: "emptyHeart")
+        guard let imageName = movie?.imageName else { return }
+        backgroundImageView.image = UIImage(named: imageName)
+    }
+
+    @objc func handleTapFavorite() {
+        cellInterfaceDelegate?.toggleFavoriteMovie()
     }
 }

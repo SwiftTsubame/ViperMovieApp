@@ -14,7 +14,7 @@ class MovieListRouterTests: XCTestCase {
     var movieListRouter = MovieListRouter()
 
     func testTopVCIsMovieDetailVCWhenPresented() {
-        movieListRouter.presentMovieDetailView(with: Movie(name: "abc", rating: 1))
+        movieListRouter.presentMovieDetailView(with: Movie(name: "abc", rating: 1, imageName: "avatar"))
         XCTAssertTrue(movieListRouter.topNavController?.viewControllers.last is MovieDetailViewController)
     }
 }

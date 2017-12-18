@@ -63,7 +63,7 @@ class MovieDetailPresenterTests: XCTestCase {
     }
     
     func testViewInterfaceShowMovieWhenSuccess() {
-        mockInteractor.movie = Movie(name: "abc", rating: 4)
+        mockInteractor.movie = Movie(name: "abc", rating: 4, imageName: "avatar")
         movieDetailPresenter.prepareToShowMovieDetail()
         XCTAssertEqual(mockInterface.shouldShowNoMovieError, false)
         XCTAssertEqual(mockInterface.shouldShowMovieDetail, true)
@@ -76,10 +76,10 @@ class MovieDetailPresenterTests: XCTestCase {
     }
     
     func testIsFavoriteValueAgreesWithInteractorMovieValue() {
-        mockInteractor.movie = Movie(name: "abc", rating: 4)
+        mockInteractor.movie = Movie(name: "abc", rating: 4, imageName: "avatar")
         XCTAssertEqual(movieDetailPresenter.isFavorite, false)
         
-        mockInteractor.movie = Movie(name: "abc", rating: 4, isFavorite: true)
+        mockInteractor.movie = Movie(name: "abc", rating: 4, isFavorite: true, imageName: "avatar")
         XCTAssertEqual(movieDetailPresenter.isFavorite, true)
     }
 }
