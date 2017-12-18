@@ -11,7 +11,12 @@ import XCTest
 
 class MovieListRouterTests: XCTestCase {
     
-    var movieListRouter = MovieListRouter()
+    var movieListRouter: MovieListRouter!
+
+    override func setUp() {
+        super.setUp()
+        movieListRouter = MovieListRouter()
+    }
 
     func testTopVCIsMovieDetailVCWhenPresented() {
         movieListRouter.presentMovieDetailView(with: Movie(name: "abc", rating: 1, imageName: "avatar"))

@@ -11,13 +11,10 @@ import XCTest
 
 class MovieEntityTests: XCTestCase {
 
-    override func setUp() {
-        super.setUp()
-    }
-
     func testMovieSetGet() {
         let movie = Movie(name: "Interstella", rating: 5, imageName: "avatar")
         XCTAssertEqual(movie.name, "Interstella")
         XCTAssertEqual(movie.rating, 5)
+        XCTAssertEqual(movie.imageName, "avatar")
     }
 }

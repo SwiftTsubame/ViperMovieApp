@@ -19,7 +19,6 @@ class MovieListCollectionViewController: UICollectionViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = "Movies"
         setupCollectionView()
         setupSortingNavigationButton()
         presenter?.loadMovies()
@@ -27,6 +26,7 @@ class MovieListCollectionViewController: UICollectionViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        title = "Movies"
         presenter?.loadMovies()
     }
 
