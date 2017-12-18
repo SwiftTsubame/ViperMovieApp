@@ -18,13 +18,15 @@ class MovieListPresenterTests: XCTestCase {
     
     class MockRouter: MovieListRouting {
 
+        var container: MovieDetailDependencyContainer = MovieDetailDependencyContainer()
+        var movie: Movie?
+        var sortCompletion: ((SortType) -> ())?
         var alertController: AlertController = AlertController()
 
         func presentSortOptions(sortCompletion: ((SortType) -> ())?) {
+            self.sortCompletion = sortCompletion
         }
 
-        var container: MovieDetailDependencyContainer = MovieDetailDependencyContainer()
-        var movie: Movie?
         func presentMovieDetailView(with movie: Movie) {
             self.movie = movie
         }
@@ -97,6 +99,16 @@ class MovieListPresenterTests: XCTestCase {
         presenter?.refreshMovieList(with: fakeMovies)
         presenter?.selectMovie(fakeMovies[0])
         XCTAssertEqual(mockRouter.movie?.name, fakeMovies[0].name)
+    }
+
+    func testPresentSortingOptions() {
+        presenter?.refreshMovieList(with: fakeMovies)
+        // Before injecting a closure, router handler should be nil
+        XCTAssertNil(mockRouter.sortCompletion)
+        func subHandler(_ sortType: SortType) { }
+        mockRouter.presentSortOptions(sortCompletion: subHandler)
+        // After injecting a closure, router handler should NOT be nil
+        XCTAssertNotNil(mockRouter.sortCompletion)
     }
 }
 
