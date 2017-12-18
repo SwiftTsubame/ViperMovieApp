@@ -59,8 +59,8 @@ extension MovieListCollectionViewController: MovieListViewInterface {
 }
 
 extension MovieListCollectionViewController: CellInterfaceDelegate {
-    func toggleFavoriteMovie() {
-
+    func toggleFavoriteMovie(at index: Int) {
+        presenter?.toggleFavorite(movie: index)
     }
 }
 
@@ -83,6 +83,8 @@ extension MovieListCollectionViewController: UICollectionViewDelegateFlowLayout 
         }
         let movie = presenter?.movie(at: indexPath.item)
         cell.configCell(movie)
+        cell.tag = indexPath.item
+        cell.cellInterfaceDelegate = self
         return cell
     }
 

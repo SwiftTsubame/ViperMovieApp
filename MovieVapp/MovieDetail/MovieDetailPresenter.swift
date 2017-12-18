@@ -31,8 +31,12 @@ class MovieDetailPresenter: MovieDetailPresentation {
         self.router = router
     }
 
+    private var movie: Movie? {
+        return interactor.movie
+    }
+
     func prepareToShowMovieDetail() {
-        guard let selectedMovie = interactor.movie else {
+        guard let selectedMovie = movie else {
             viewInterface?.showNoMovieError()
             return
         }
@@ -40,10 +44,11 @@ class MovieDetailPresenter: MovieDetailPresentation {
     }
     
     func toggleFavorite() {
-        interactor.toggleFavorite()
+        guard let movie = movie else { return }
+        interactor.toggleFavorite(movie: movie)
     }
     
     var isFavorite: Bool {
-        return interactor.movie?.isFavorite ?? false
+        return movie?.isFavorite ?? false
     }
 }

@@ -10,26 +10,12 @@
 
 import Foundation
 
-protocol MovieDetailInteraction: class {
+protocol MovieDetailInteraction: class, MovieFavoritable {
     var movie: Movie? { get set }
-    func toggleFavorite()
 }
 
 class MovieDetailInteractor: MovieDetailInteraction {
     var movie: Movie?
-    
-    func toggleFavorite() {
-        guard var movie = movie else { return }
-        movie.isFavorite = !movie.isFavorite
-        self.movie = movie
-        updateMovieRepository(with: movie)
-    }
-    
-    private func updateMovieRepository(with newMovie: Movie) {
-        let moviesNames = MovieClient.shared.getMovies().map { $0.name }
-        guard let index = moviesNames.index(of: newMovie.name) else { return }
-        var movies = MovieClient.shared.getMovies()
-        movies[index] = newMovie
-        MovieClient.shared.setMovies(movies)
-    }
+    internal var movies: [Movie]?
 }
+

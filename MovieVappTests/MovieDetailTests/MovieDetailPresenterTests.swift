@@ -9,16 +9,20 @@
 import XCTest
 @testable import MovieVapp
 
+
+
 class MovieDetailPresenterTests: XCTestCase {
 
     var movieDetailPresenter: MovieDetailPresenter!
 
     class MockInteractor: MovieDetailInteraction {
+        var movies: [Movie]? {
+            didSet {
+                toggleFavoriteCalled = true
+            }
+        }
         var movie: Movie?
         var toggleFavoriteCalled = false
-        func toggleFavorite() {
-            toggleFavoriteCalled = true
-        }
     }
     
     class MockRouter: MovieDetailRouting {
@@ -39,13 +43,16 @@ class MovieDetailPresenterTests: XCTestCase {
             shouldShowMovieDetail = true
         }
     }
-    
-    
-    var mockInteractor = MockInteractor()
-    var mockRouter = MockRouter()
-    var mockInterface = MockInterface()
+
+    var mockInteractor: MockInteractor!
+    var mockRouter: MockRouter!
+    var mockInterface: MockInterface!
+
     override func setUp() {
         super.setUp()
+        mockInteractor = MockInteractor()
+        mockRouter = MockRouter()
+        mockInterface = MockInterface()
         movieDetailPresenter = MovieDetailPresenter(interactor: mockInteractor, router: mockRouter)
         movieDetailPresenter.viewInterface = mockInterface
     }
@@ -71,8 +78,9 @@ class MovieDetailPresenterTests: XCTestCase {
     
     func testToggleFavoriteWillTriggerInteractorToggleCall() {
         XCTAssertEqual(mockInteractor.toggleFavoriteCalled, false)
+        mockInteractor.movie = Movie(name: "abc", rating: 4, isFavorite: true, imageName: "avatar")
         movieDetailPresenter.toggleFavorite()
-        XCTAssertEqual(mockInteractor.toggleFavoriteCalled, true)
+        XCTAssertEqual(mockInteractor.movie?.isFavorite, false)
     }
     
     func testIsFavoriteValueAgreesWithInteractorMovieValue() {

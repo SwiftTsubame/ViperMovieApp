@@ -14,12 +14,13 @@ protocol MovieListPresentation: class {
     func loadMovies()
     func selectMovie(_ movie: Movie)
     func showSortingOptions()
+    func toggleFavorite(movie atIndex: Int)
 }
 
 class MovieListPresenter: MovieListPresentation {
 
     // MARK: Init
-    private let interactor: MovieListInteraction
+    private var interactor: MovieListInteraction
     private let router: MovieListRouting
 
     init(interactor: MovieListInteraction, router: MovieListRouting) {
@@ -64,6 +65,12 @@ class MovieListPresenter: MovieListPresentation {
         router.presentSortOptions { [weak self] (sortType) in
             self?.interactor.sortMovies(sortType: sortType)
         }
+    }
+
+    func toggleFavorite(movie atIndex: Int) {
+        guard let movie = movies?[atIndex] else { return }
+        interactor.toggleFavorite(movie: movie)
+        self.movies = MovieClient.shared.getMovies()
     }
 }
 

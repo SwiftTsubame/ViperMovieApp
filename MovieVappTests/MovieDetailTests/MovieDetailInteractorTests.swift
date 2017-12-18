@@ -30,11 +30,11 @@ class MovieDetailInteractorTests: XCTestCase {
     }
     
     func testToggleMovieWillChangeFavoriteFlag() {
-        guard let oldFavoriteValue = subject.movie?.isFavorite else {
+        guard let oldMovie = subject.movie, let oldFavoriteValue = subject.movie?.isFavorite else {
             XCTFail("Movie has no isFavorite field")
             return
         }
-        subject.toggleFavorite()
+        subject.toggleFavorite(movie: oldMovie)
         guard let newFavoriteValue = subject.movie?.isFavorite else {
             XCTFail("New Movie has no isFavorite field")
             return
@@ -45,8 +45,7 @@ class MovieDetailInteractorTests: XCTestCase {
     func testToggleMovieWillUpdateRepository() {
         MovieClient.shared.setMovies([fakeMovie])
         let oldFavoriteValue = MovieClient.shared.getMovies()[0].isFavorite
-        
-        subject.toggleFavorite()
+        subject.toggleFavorite(movie: [fakeMovie][0])
         XCTAssertEqual(MovieClient.shared.getMovies()[0].isFavorite, !oldFavoriteValue)
     }
 }

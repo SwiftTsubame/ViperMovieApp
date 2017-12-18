@@ -9,7 +9,7 @@
 import UIKit
 
 protocol CellInterfaceDelegate: class {
-    func toggleFavoriteMovie()
+    func toggleFavoriteMovie(at index: Int)
 }
 
 class MovieCell: BaseCell {
@@ -25,10 +25,11 @@ class MovieCell: BaseCell {
         return lb
     }()
     
-    let favoriteImageView: UIImageView = {
+    lazy var favoriteImageView: UIImageView = {
         let iv = UIImageView()
         iv.contentMode = .scaleAspectFill
         iv.clipsToBounds = true
+        iv.isUserInteractionEnabled = true
         iv.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleTapFavorite)))
         return iv
     }()
@@ -42,6 +43,7 @@ class MovieCell: BaseCell {
 
     weak var cellInterfaceDelegate: CellInterfaceDelegate?
 
+    private var movie: Movie?
     override func setupViews() {
         super.setupViews()
         configCellLayer()
@@ -60,6 +62,7 @@ class MovieCell: BaseCell {
     }
 
     func configCell(_ movie: Movie?) {
+        self.movie = movie
         titleLabel.text = movie?.name
         favoriteImageView.image = movie?.isFavorite == true ? #imageLiteral(resourceName: "heart") : #imageLiteral(resourceName: "emptyHeart")
         guard let imageName = movie?.imageName else { return }
@@ -67,6 +70,7 @@ class MovieCell: BaseCell {
     }
 
     @objc func handleTapFavorite() {
-        cellInterfaceDelegate?.toggleFavoriteMovie()
+        favoriteImageView.image = movie?.isFavorite == true ? #imageLiteral(resourceName: "heart") : #imageLiteral(resourceName: "emptyHeart")
+        cellInterfaceDelegate?.toggleFavoriteMovie(at: tag)
     }
 }

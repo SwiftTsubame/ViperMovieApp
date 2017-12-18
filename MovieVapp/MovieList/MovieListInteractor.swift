@@ -8,7 +8,7 @@
 
 import Foundation
 
-protocol MovieListInteraction {
+protocol MovieListInteraction: MovieFavoritable {
     func loadMovies(endPoint: Endpoint)
     func sortMovies(sortType: SortType)
 }
@@ -20,10 +20,12 @@ protocol MovieListInteractionOutput: class {
 }
 
 class MovieListInteractor: MovieListInteraction {
+    
+    internal var movie: Movie?
 
     weak var output: MovieListInteractionOutput?
     
-    private(set) var movies: [Movie]?
+    var movies: [Movie]?
     private let client: MovieClient
     
     init(client: MovieClient = MovieClient.shared) {
@@ -54,6 +56,7 @@ class MovieListInteractor: MovieListInteraction {
             })
         default: break
         }
+        client.setMovies(self.movies ?? [])
         output?.refreshMovieList(with: self.movies ?? [])
     }
 }
