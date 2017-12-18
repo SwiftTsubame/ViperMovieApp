@@ -13,6 +13,7 @@ protocol MovieListPresentation: class {
     func movie(at index: Int) -> Movie?
     func loadMovies()
     func selectMovie(_ movie: Movie)
+    func showSortingOptions()
 }
 
 class MovieListPresenter: MovieListPresentation {
@@ -58,6 +59,13 @@ class MovieListPresenter: MovieListPresentation {
     func selectMovie(_ movie: Movie) {
         router.presentMovieDetailView(with: movie)
     }
+
+    func showSortingOptions() {
+        print("show sorting options")
+        router.presentSortOptions { [weak self] (sortType) in
+            self?.interactor.sortMovies(sortType: sortType)
+        }
+    }
 }
 
 extension MovieListPresenter: MovieListInteractionOutput {
@@ -69,6 +77,3 @@ extension MovieListPresenter: MovieListInteractionOutput {
         movieListViewInterface?.showLoadingError(errorMessage: "Some Error occured")
     }
 }
-
-
-

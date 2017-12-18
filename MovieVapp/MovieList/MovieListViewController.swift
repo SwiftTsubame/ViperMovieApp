@@ -44,6 +44,7 @@ class MovieListCollectionViewController: UICollectionViewController {
 
     @objc private func handleSortingTapped() {
         print("Sort Tapped")
+        presenter?.showSortingOptions()
     }
 }
 

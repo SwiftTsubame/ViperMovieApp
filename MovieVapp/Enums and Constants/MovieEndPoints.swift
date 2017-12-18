@@ -17,3 +17,8 @@ struct APIBuilder {
 enum Endpoint: String {
     case movieList, favoriteMovies
 }
+
+enum SortType {
+    case name, rating, favorite
+}
+

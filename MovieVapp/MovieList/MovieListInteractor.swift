@@ -10,6 +10,7 @@ import Foundation
 
 protocol MovieListInteraction {
     func loadMovies(endPoint: Endpoint)
+    func sortMovies(sortType: SortType)
 }
 
 protocol MovieListInteractionOutput: class {
@@ -40,4 +41,10 @@ class MovieListInteractor: MovieListInteraction {
             }
         }
     }
+
+    func sortMovies(sortType: SortType) {
+        print("interactor is sorting movies on type: \(sortType)")
+    }
+
+
 }
