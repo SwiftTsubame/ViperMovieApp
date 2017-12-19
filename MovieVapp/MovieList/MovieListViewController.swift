@@ -12,6 +12,13 @@ class MovieListCollectionViewController: UICollectionViewController {
 
     var presenter: MovieListPresentation?
 
+    lazy var refreshControl: UIRefreshControl = {
+        let rc = UIRefreshControl()
+        rc.addTarget(self, action: #selector(handleRefresh(sender:)), for: .valueChanged)
+        rc.tintColor = UIColor.themePurple().withAlphaComponent(0.8)
+        return rc
+    }()
+
     // MARK:- View Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -30,12 +37,18 @@ class MovieListCollectionViewController: UICollectionViewController {
         presenter?.showSortingOptions()
     }
 
+    @objc private func handleRefresh(sender: UIRefreshControl) {
+        presenter?.loadMovies()
+        sender.endRefreshing()
+    }
+
     // MARK:- View Setups
     private func setupCollectionView() {
         collectionView?.backgroundColor = .white
         collectionView?.alwaysBounceVertical = true
         collectionView?.showsVerticalScrollIndicator = true
         collectionView?.register(MovieCell.self, forCellWithReuseIdentifier: MovieCell.nameString)
+        collectionView?.refreshControl = refreshControl
     }
 
     private func setupSortingNavigationButton() {
