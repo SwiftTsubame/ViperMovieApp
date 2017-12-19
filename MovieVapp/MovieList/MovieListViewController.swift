@@ -16,12 +16,12 @@ protocol MovieListViewInterface: class {
 class MovieListCollectionViewController: UICollectionViewController {
 
     var presenter: MovieListPresentation?
-    
+
+    // MARK:- View Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
         setupCollectionView()
         setupSortingNavigationButton()
-        presenter?.loadMovies()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -30,6 +30,12 @@ class MovieListCollectionViewController: UICollectionViewController {
         presenter?.loadMovies()
     }
 
+    // MARK:- Actions
+    @objc private func handleSortingTapped() {
+        presenter?.showSortingOptions()
+    }
+
+    // MARK:- View Setups
     private func setupCollectionView() {
         collectionView?.backgroundColor = .white
         collectionView?.alwaysBounceVertical = true
@@ -40,10 +46,6 @@ class MovieListCollectionViewController: UICollectionViewController {
     private func setupSortingNavigationButton() {
         let sortButton = UIBarButtonItem(title: "Sort", style: .done, target: self, action: #selector(handleSortingTapped))
         navigationItem.rightBarButtonItem = sortButton
-    }
-
-    @objc private func handleSortingTapped() {
-        presenter?.showSortingOptions()
     }
 }
 
@@ -64,7 +66,7 @@ extension MovieListCollectionViewController: CellInterfaceDelegate {
     }
 }
 
-// MARK: CollectionView Delegates
+// MARK:- CollectionView Delegates
 extension MovieListCollectionViewController: UICollectionViewDelegateFlowLayout {
     // Datasource
     override func numberOfSections(in collectionView: UICollectionView) -> Int {
@@ -78,9 +80,7 @@ extension MovieListCollectionViewController: UICollectionViewDelegateFlowLayout 
     override func collectionView(_ collectionView: UICollectionView,
                                  cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MovieCell.nameString,
-                                 for: indexPath) as? MovieCell else {
-            fatalError()
-        }
+                                 for: indexPath) as? MovieCell else { fatalError() }
         let movie = presenter?.movie(at: indexPath.item)
         cell.configCell(movie)
         cell.tag = indexPath.item

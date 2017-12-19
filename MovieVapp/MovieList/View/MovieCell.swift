@@ -44,10 +44,13 @@ class MovieCell: BaseCell {
     weak var cellInterfaceDelegate: CellInterfaceDelegate?
 
     private var movie: Movie?
+
     override func setupViews() {
         super.setupViews()
+
         configCellLayer()
         addSubViewList(backgroundImageView, titleLabel, favoriteImageView)
+        
         backgroundImageView.fillSuperview()
 
         titleLabel.anchorWithConstantsToTop(nil, left: leftAnchor, bottom: bottomAnchor, right: rightAnchor, topConstant: 0, leftConstant: 0, bottomConstant: 8, rightConstant: 0)
@@ -56,21 +59,25 @@ class MovieCell: BaseCell {
         _ = favoriteImageView.anchor(top: topAnchor, left: nil, bottom: nil, right: rightAnchor, topConstant: 8, leftConstant: 0, bottomConstant: 0, rightConstant: 8, widthConstant: 28, heightConstant: 28)
     }
 
-    private func configCellLayer() {
-        layer.cornerRadius = 6
-        layer.masksToBounds = true
-    }
-
     func configCell(_ movie: Movie?) {
         self.movie = movie
         titleLabel.text = movie?.name
-        favoriteImageView.image = movie?.isFavorite == true ? #imageLiteral(resourceName: "heart") : #imageLiteral(resourceName: "emptyHeart")
+        setFavoriteImage(for: movie)
         guard let imageName = movie?.imageName else { return }
         backgroundImageView.image = UIImage(named: imageName)
     }
 
     @objc func handleTapFavorite() {
-        favoriteImageView.image = movie?.isFavorite == true ? #imageLiteral(resourceName: "heart") : #imageLiteral(resourceName: "emptyHeart")
+        setFavoriteImage(for: self.movie)
         cellInterfaceDelegate?.toggleFavoriteMovie(at: tag)
+    }
+
+    private func configCellLayer() {
+        layer.cornerRadius = 6
+        layer.masksToBounds = true
+    }
+
+    private func setFavoriteImage(for movie: Movie?) {
+        favoriteImageView.image = movie?.isFavorite == true ? #imageLiteral(resourceName: "heart") : #imageLiteral(resourceName: "emptyHeart")
     }
 }

@@ -8,30 +8,36 @@
 
 import Foundation
 
+// MARK:- Interaction Protocol
 protocol MovieListInteraction: MovieFavoritable {
     func loadMovies(endPoint: Endpoint)
     func sortMovies(sortType: SortType)
 }
 
+// MARK:- Interaction -> Presenter Protocol
 protocol MovieListInteractionOutput: class {
     var movies: [Movie]? { get }
     func refreshMovieList(with movies: [Movie])
     func showLoadingMovieListError(_ error: MovieErrorType)
 }
 
+// MARK:- Interactor
 class MovieListInteractor: MovieListInteraction {
     
-    internal var movie: Movie?
-
-    weak var output: MovieListInteractionOutput?
-    
+    internal var movie: Movie? // to manage the movie whose favorite is being toggled
     var movies: [Movie]?
+    weak var output: MovieListInteractionOutput?
+
+    /// Init
     private let client: MovieClient
-    
+
     init(client: MovieClient = MovieClient.shared) {
         self.client = client
     }
-    
+
+    /// Get movies from webservice (currently fake data in memory).
+    /// On success: refresh movie list in collectionview
+    /// On failure: show error view in collectionview
     func loadMovies(endPoint: Endpoint) {
         client.getMovieList(from: endPoint) { (result) in
             switch result {
@@ -44,6 +50,8 @@ class MovieListInteractor: MovieListInteraction {
         }
     }
 
+    /// Sort movies against movie name or movie rating.
+    /// On finish, update movies in Movie Client
     func sortMovies(sortType: SortType) {
         switch sortType {
         case .name:
@@ -57,6 +65,5 @@ class MovieListInteractor: MovieListInteraction {
         default: break
         }
         client.setMovies(self.movies ?? [])
-        output?.refreshMovieList(with: self.movies ?? [])
     }
 }
