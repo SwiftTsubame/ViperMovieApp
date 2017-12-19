@@ -8,11 +8,6 @@
 
 import UIKit
 
-protocol MovieListViewInterface: class {
-    func refreshMovieList()
-    func showLoadingError(errorMessage: String)
-}
-
 class MovieListCollectionViewController: UICollectionViewController {
 
     var presenter: MovieListPresentation?

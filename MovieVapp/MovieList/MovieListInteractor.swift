@@ -65,5 +65,6 @@ class MovieListInteractor: MovieListInteraction {
         default: break
         }
         client.setMovies(self.movies ?? [])
+        output?.refreshMovieList(with: self.movies ?? [])
     }
 }

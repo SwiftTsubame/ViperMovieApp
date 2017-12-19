@@ -18,7 +18,6 @@ protocol MovieListRouting: class {
 class MovieListRouter: Router, MovieListRouting {
     
     var container = MovieDetailDependencyContainer()
-    
     let listContainer = ListDependencyContainer()
     var alertController = AlertController.shared
 
@@ -30,6 +29,6 @@ class MovieListRouter: Router, MovieListRouting {
 
     func presentSortOptions(sortCompletion: ((SortType) -> ())?) {
         guard let listViewVC = topViewController else { return }
-        AlertController.shared.presentSortOptions(on: listViewVC, sortCompletion: sortCompletion)
+        alertController.presentSortOptions(on: listViewVC, sortCompletion: sortCompletion)
     }
 }

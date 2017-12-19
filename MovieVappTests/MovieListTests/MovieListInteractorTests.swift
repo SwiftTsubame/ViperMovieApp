@@ -98,7 +98,9 @@ class MovieListInteractorTests: XCTestCase {
         subject.sortMovies(sortType: .name)
         // orginal movie names are: ["abc", "efg", "bbb"]
        let movieBBB = StubMovieListResult.movies[2] // get movie bbb
+        XCTAssertEqual(movieBBB, subject.movies?[1])
         XCTAssertEqual(movieBBB, movieListInteractorOutput.movies?[1])
+
     }
 
     func test_MoviesByRating_UponSortRating() {
@@ -106,6 +108,7 @@ class MovieListInteractorTests: XCTestCase {
         subject.sortMovies(sortType: .rating)
         // orginal movie ratings are: [1.3, 3.5, 2.5]
         let movieHighestRating = StubMovieListResult.movies[1] // get movie bbb
+        XCTAssertEqual(movieHighestRating, subject.movies?[2])
         XCTAssertEqual(movieHighestRating, movieListInteractorOutput.movies?[2])
     }
 

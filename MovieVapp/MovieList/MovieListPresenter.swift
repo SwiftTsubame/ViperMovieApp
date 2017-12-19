@@ -7,6 +7,7 @@
 
 import Foundation
 
+// MARK:- Movie List Presentation Protocol
 protocol MovieListPresentation: class {
     var sections: Int { get }
     var movieCount: Int { get }
@@ -17,15 +18,24 @@ protocol MovieListPresentation: class {
     func toggleFavorite(movie atIndex: Int)
 }
 
+// MARK:- Presenter -> View Interface
+protocol MovieListViewInterface: class {
+    func refreshMovieList()
+    func showLoadingError(errorMessage: String)
+}
+
+// MARK:- Presenter
 class MovieListPresenter: MovieListPresentation {
 
     // MARK: Init
     private var interactor: MovieListInteraction
     private let router: MovieListRouting
+    private let movieClient: MovieClient
 
-    init(interactor: MovieListInteraction, router: MovieListRouting) {
+    init(interactor: MovieListInteraction, router: MovieListRouting, movieClient: MovieClient = MovieClient.shared) {
         self.interactor = interactor
         self.router = router
+        self.movieClient = movieClient
     }
     
     weak var movieListViewInterface: MovieListViewInterface?
@@ -70,14 +80,11 @@ class MovieListPresenter: MovieListPresentation {
     func toggleFavorite(movie atIndex: Int) {
         guard let movie = movies?[atIndex] else { return }
         interactor.toggleFavorite(movie: movie)
-        self.movies = MovieClient.shared.getMovies()
+        self.movies = movieClient.getMovies()
     }
 }
 
 extension MovieListPresenter: MovieListInteractionOutput {
-    func refreshMovieListAfterSorting(_ movies: [Movie]) {
-        self.movies = movies
-    }
 
     func refreshMovieList(with movies: [Movie]) {
         self.movies = movies
